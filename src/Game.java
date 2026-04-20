@@ -6,7 +6,15 @@ public class Game {
     private int spawnInterval;
     private GameView window;
 
+    private int state;
+
+    public static final int STATE_TITLE = 0;
+    public static final int STATE_INSTRUCTIONS = 1;
+    public static final int STATE_GAME = 2;
+    public static final int STATE_END = 3;
+
     public Game(){
+        state = STATE_GAME;
         window = new GameView(this);
     }
 
@@ -36,5 +44,9 @@ public class Game {
 
     public static void main(String[] args){
         Game ghostBusters = new Game();
+    }
+
+    public int getState() {
+        return state;
     }
 }
