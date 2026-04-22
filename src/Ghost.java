@@ -1,13 +1,17 @@
+import java.awt.*;
 import java.util.ArrayList;
 
 public class Ghost {
     private int x;
     private int y;
-    private ArrayList<Ghost> neighbors;
+    private Image color;
     private double speed;
+    private Image ghostImage;
+
+    private ArrayList<Ghost> neighbors;
     private boolean isAlive;
 
-    public Ghost(){
+    public Ghost(GameView frontend, int color_idnex){
 
     }
 

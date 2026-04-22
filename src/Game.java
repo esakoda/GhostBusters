@@ -1,5 +1,5 @@
 public class Game {
-    private Ghost[] ghosts;
+    private Ghost[][] ghosts;
     private LaserPack laserPack;
     private int score;
     private boolean gameOver;
@@ -13,9 +13,24 @@ public class Game {
     public static final int STATE_GAME = 2;
     public static final int STATE_END = 3;
 
+    // Create a constant array of ghost colors
+    public static final String[] ghost_colors = {"Red", "Orange", "Yellow", "Green", "Blue", "Purple"};
+
     public Game(){
-        state = STATE_GAME;
-        window = new GameView(this);
+        this.state = STATE_GAME;
+        this.window = new GameView(this);
+
+        // TODO: add constants for the row/col size
+        // Create a 2D array, representing a grid of ghosts
+        this.ghosts = new Ghost[3][7];
+
+        // Index through the empty array to create individual ghost objects
+        for (Ghost[] row: ghosts) {
+            for (Ghost g: row) {
+                int random_color_index = (int) (Math.random() * 6);
+                g = new Ghost(window, ghost_colors[random_color_index]);
+            }
+        }
     }
 
     public void deleteGhost(){
