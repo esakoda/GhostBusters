@@ -5,6 +5,7 @@ public class GameView extends JFrame {
     private Game backend;
     private final int WINDOW_WIDTH = 1000;
     private final int WINDOW_HEIGHT = 800;
+    private Image background;
 
     private Image[] ghostImages = new Image[6];
 
@@ -34,6 +35,7 @@ public class GameView extends JFrame {
         } else if (state == Game.STATE_INSTRUCTIONS) {
             drawInstructions(g);
         } else if (state == Game.STATE_GAME) {
+            drawGame(g);
             Ghost[][] ghosts = backend.getGhosts();
 
             // Iterate through 2D Ghost array and print it out
@@ -47,7 +49,7 @@ public class GameView extends JFrame {
             }
 
         } else if (state == Game.STATE_END) {
-
+            drawEnd(g);
         }
     }
 
@@ -55,6 +57,14 @@ public class GameView extends JFrame {
 
     }
     public void drawInstructions(Graphics g) {
+
+    }
+    public void drawGame(Graphics g){
+        this.background = new ImageIcon("resources/GhostBustersBackground.png").getImage();
+        g.drawImage(background,0,0,this);
+
+    }
+    public void drawEnd(Graphics g){
 
     }
 }
