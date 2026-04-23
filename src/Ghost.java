@@ -4,16 +4,32 @@ import java.util.ArrayList;
 public class Ghost {
     private int x;
     private int y;
-    private Image color;
+    private int colorIndex;
+
     private double speed;
-    private Image ghostImage;
 
     private ArrayList<Ghost> neighbors;
     private boolean isAlive;
 
-    public Ghost(GameView frontend, int color_idnex){
-
+    public Ghost(int colorIndex, int x, int y){
+        this.colorIndex = colorIndex;
+        this.x = x;
+        this.y = y;
     }
+
+    // Getter methods
+    public int getX() {
+        return this.x;
+    }
+
+    public int getY() {
+        return this.y;
+    }
+
+    public int getColorIndex() {
+        return this.colorIndex;
+    }
+
 
     public void hasValidNeighbor(){
 
