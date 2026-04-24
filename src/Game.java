@@ -1,7 +1,11 @@
-public class Game {
+import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+
+public class Game implements KeyListener {
+    private Arrow arrow;
     private Ghost[][] ghosts;
 
-    private LaserPack laserPack;
     private int score;
     private boolean gameOver;
     private int spawnInterval;
@@ -24,11 +28,15 @@ public class Game {
     public static final int STATE_GAME = 2;
     public static final int STATE_END = 3;
 
+    public static final int STEP_SIZE = 10;
+
     // Create a constant array of ghost colors
     public static final String[] ghostColors = {"Red", "Orange", "Yellow", "Green", "Blue", "Purple"};
 
     public Game(){
-        this.state = STATE_GAME;
+        state = STATE_GAME;
+        arrow = new Arrow();
+
         // TODO: TEMPORARY SOLUTION
         // Create a 2D array, representing a grid of ghosts
         this.ghosts = new Ghost[GHOST_ROWS][GHOST_COL];
@@ -46,6 +54,7 @@ public class Game {
         }
 
         this.window = new GameView(this);
+        window.addKeyListener(this);
 
         // TODO: add constants for the row/col size
     }
@@ -85,5 +94,35 @@ public class Game {
 
     public int getState() {
         return state;
+    }
+
+    public Arrow getArrow(){
+        return arrow;
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        switch(e.getKeyCode())
+        {
+            case KeyEvent.VK_UP:
+                // Shifts angle up
+                arrow.shiftAngle(-1);
+                break;
+            case KeyEvent.VK_DOWN:
+                // Shifts angle down
+                arrow.shiftAngle(1);
+                break;
+        }
+        window.repaint();
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+
     }
 }
