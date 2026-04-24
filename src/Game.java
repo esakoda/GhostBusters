@@ -6,7 +6,6 @@ public class Game implements KeyListener {
     private Arrow arrow;
     private Ghost[][] ghosts;
 
-    private LaserPack laserPack;
     private int score;
     private boolean gameOver;
     private int spawnInterval;
