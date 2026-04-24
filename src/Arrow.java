@@ -1,23 +1,19 @@
 import java.awt.*;
 
 public class Arrow{
-    private int startX;
-    private int startY;
     private int endX;
     private int endY;
     private double angle;
-    private double sensitivity;
-    private int arrowLength;
     private Laser[] lasers;
+    private static final int START_X = 265;
+    private static final int START_Y = 370;
+    private static final double SENSITIVITY = 0.05;
+    private static final int ARROW_LENGTH = 100;
 
     public Arrow(){
-        this.startX = 265;
-        this.startY = 370;
-        this.arrowLength = 100;
-        this.endX = startX + arrowLength;
-        this.endY = startY;
+        this.endX = START_X + ARROW_LENGTH;
+        this.endY = START_Y;
         this.angle = 0;
-        this.sensitivity = 0.05;
     }
 
     public void followCursor(int mouseX, int mouseY){
@@ -32,25 +28,26 @@ public class Arrow{
 
     }
 
+    // Shift the angle of the arrow based on user input
     public void shiftAngle(int shift) {
         // Shifts angle up or down by a specific sensitivity
-        angle += shift * sensitivity;
+        angle += shift * SENSITIVITY;
         // Calculates new end x and end y by using cosine and sine to get the new horizontal and vertical positions
         // of the arrow based on the new angle
-        endX = (int)(startX + arrowLength * Math.cos(angle));
-        endY = (int)(startY + arrowLength * Math.sin(angle));
+        endX = (int)(START_X + ARROW_LENGTH * Math.cos(angle));
+        endY = (int)(START_Y + ARROW_LENGTH * Math.sin(angle));
     }
 
     public void draw(Graphics g){
         g.setColor(Color.RED);
-        g.drawLine(startX, startY, endX, endY);
+        g.drawLine(START_X, START_Y, endX, endY);
     }
 
-    public int getEndX() {
+    public int getArrowEndX() {
         return endX;
     }
 
-    public int getEndY() {
+    public int getArrowEndY() {
         return endY;
     }
 }

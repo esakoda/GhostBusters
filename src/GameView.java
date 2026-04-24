@@ -12,6 +12,9 @@ public class GameView extends JFrame {
     public GameView(Game backend){
         this.backend = backend;
 
+        // Initialize background
+        this.background = new ImageIcon("resources/GhostBustersBackground.png").getImage();
+
         // Initialize an array of different colored ghost images
         ghostImages[0] = new ImageIcon("resources/redGhost.png").getImage();
         ghostImages[1] = new ImageIcon("resources/orangeGhost.png").getImage();
@@ -60,7 +63,6 @@ public class GameView extends JFrame {
 
     }
     public void drawGame(Graphics g){
-        this.background = new ImageIcon("resources/GhostBustersBackground.png").getImage();
         g.drawImage(background,0,0,this);
         backend.getArrow().draw(g);
     }
