@@ -29,6 +29,8 @@ public class Game implements KeyListener {
     public static final int STATE_GAME = 2;
     public static final int STATE_END = 3;
 
+    public static final int STEP_SIZE = 10;
+
     // Create a constant array of ghost colors
     public static final String[] ghostColors = {"Red", "Orange", "Yellow", "Green", "Blue", "Purple"};
 
@@ -95,6 +97,10 @@ public class Game implements KeyListener {
         return state;
     }
 
+    public Arrow getArrow(){
+        return arrow;
+    }
+
     @Override
     public void keyTyped(KeyEvent e) {
 
@@ -105,11 +111,12 @@ public class Game implements KeyListener {
         switch(e.getKeyCode())
         {
             case KeyEvent.VK_UP:
-                int topOfPane = window.getInsets().top;
-                arrow.shiftY(-STEP_SIZE, topOfPane, KeyListenerDemoView.SCREEN_HEIGHT);
+                // Shifts angle up
+                arrow.shiftAngle(-1);
                 break;
             case KeyEvent.VK_DOWN:
-                arrow.shiftY(STEP_SIZE, 0, KeyListenerDemoView.SCREEN_HEIGHT);
+                // Shifts angle down
+                arrow.shiftAngle(1);
                 break;
         }
         window.repaint();

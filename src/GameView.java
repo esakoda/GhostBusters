@@ -3,8 +3,8 @@ import java.awt.*;
 
 public class GameView extends JFrame {
     private Game backend;
-    private final int WINDOW_WIDTH = 1000;
-    private final int WINDOW_HEIGHT = 800;
+    public final int WINDOW_WIDTH = 1000;
+    public final int WINDOW_HEIGHT = 800;
     private Image background;
 
     private Image[] ghostImages = new Image[6];
@@ -62,7 +62,7 @@ public class GameView extends JFrame {
     public void drawGame(Graphics g){
         this.background = new ImageIcon("resources/GhostBustersBackground.png").getImage();
         g.drawImage(background,0,0,this);
-
+        backend.getArrow().draw(g);
     }
     public void drawEnd(Graphics g){
 
