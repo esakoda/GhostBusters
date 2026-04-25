@@ -1,4 +1,3 @@
-import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
@@ -49,7 +48,7 @@ public class Game implements KeyListener {
                 // Calculate each ghost's starting x and y positions based on row/col
                 int startX = col * GHOST_X_SPACING + GHOST_X_INITIAL;
                 int startY = row * GHOST_Y_SPACING + GHOST_Y_INITIAL;
-                ghosts[row][col] = new Ghost(randomColorIndex, startX, startY);
+                ghosts[row][col] = new Ghost(randomColorIndex, startX, startY, true);
             }
         }
 
@@ -63,6 +62,37 @@ public class Game implements KeyListener {
     public Ghost[][] getGhosts() {
         return ghosts;
     }
+
+    // Recursive method that deletes ghost neighbors of same color
+    public void ghostPop(int colorIndex, int row, int col) {
+        // If the row and col are outside the bounds of the ghosts on the screen, no need to check
+        // TODO: find how to keep a counter of the number of cols increases as the screen moves
+        // TODO: for now keep it stagnant within the 4 by 7 bounds
+        if (row < 0 || row >= GHOST_ROWS || col < 0 || col >= GHOST_COL) {
+            return;
+        }
+
+        Ghost currGhost = ghosts[row][col];
+        // If the ghost is not alive, no need to check
+        if (!currGhost.isAlive()) {
+            return;
+        }
+
+        // If the current ghost is not the right color, not valid
+        if (currGhost.getColorIndex() != colorIndex) {
+            return;
+        }
+
+        // If passes the checks, then the ghost must be deleted; update status
+        currGhost.setIsAlive(false);
+
+        // Find if the currGhost's neighbors on all four sides fit the criteria
+        ghostPop(colorIndex, row - 1, col);
+        ghostPop(colorIndex, row + 1, col);
+        ghostPop(colorIndex, row, col - 1);
+        ghostPop(colorIndex, row, col + 1);
+    }
+
 
     public void deleteGhost(){
 
@@ -116,6 +146,12 @@ public class Game implements KeyListener {
             case KeyEvent.VK_DOWN:
                 // Shifts angle down
                 arrow.shiftAngle(1);
+                break;
+            // TODO: get rid of, this is just a tester
+            case KeyEvent.VK_SPACE:
+                // Enact that the top ghost was hit
+                Ghost deadGhost = ghosts[0][0];
+                ghostPop(deadGhost.getColorIndex(), 0, 0);
                 break;
         }
         window.repaint();
