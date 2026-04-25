@@ -1,6 +1,3 @@
-import java.awt.*;
-import java.util.ArrayList;
-
 public class Ghost {
     private int x;
     private int y;
@@ -8,13 +5,13 @@ public class Ghost {
 
     private double speed;
 
-    private ArrayList<Ghost> neighbors;
     private boolean isAlive;
 
-    public Ghost(int colorIndex, int x, int y){
+    public Ghost(int colorIndex, int x, int y, boolean isAlive){
         this.colorIndex = colorIndex;
         this.x = x;
         this.y = y;
+        this.isAlive = isAlive;
     }
 
     // Getter methods
@@ -28,6 +25,15 @@ public class Ghost {
 
     public int getColorIndex() {
         return this.colorIndex;
+    }
+
+    public boolean isAlive() {
+        return isAlive;
+    }
+
+    // Setter methods
+    public void setIsAlive(boolean isAlive) {
+        this.isAlive = isAlive;
     }
 
 
