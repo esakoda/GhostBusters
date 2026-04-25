@@ -39,18 +39,6 @@ public class GameView extends JFrame {
             drawInstructions(g);
         } else if (state == Game.STATE_GAME) {
             drawGame(g);
-            Ghost[][] ghosts = backend.getGhosts();
-
-            // Iterate through 2D Ghost array and print it out
-            for (Ghost[] ghost_row: ghosts) {
-                for (Ghost currGhost : ghost_row) {
-                    Image ghostImage = ghostImages[currGhost.getColorIndex()];
-
-                    // Draw ghost with it's x and y coor
-                    g.drawImage(ghostImage, currGhost.getX(), currGhost.getY(), this);
-                }
-            }
-
         } else if (state == Game.STATE_END) {
             drawEnd(g);
         }
@@ -65,6 +53,20 @@ public class GameView extends JFrame {
     public void drawGame(Graphics g){
         g.drawImage(background,0,0,this);
         backend.getArrow().draw(g);
+
+        Ghost[][] ghosts = backend.getGhosts();
+
+        // Iterate through 2D Ghost array and print it out
+        for (Ghost[] ghost_row: ghosts) {
+            for (Ghost currGhost : ghost_row) {
+                if (currGhost.isAlive()) {
+                    Image ghostImage = ghostImages[currGhost.getColorIndex()];
+
+                    // Draw ghost with it's x and y coor
+                    g.drawImage(ghostImage, currGhost.getX(), currGhost.getY(), this);
+                }
+            }
+        }
     }
     public void drawEnd(Graphics g){
 
