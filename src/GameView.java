@@ -63,8 +63,17 @@ public class GameView extends JFrame {
 
     }
     public void drawGame(Graphics g){
+        // Draw background imgage
         g.drawImage(background,0,0,this);
+
+        // Draw arrow
         backend.getArrow().draw(g);
+
+        // Get current ball from backend and draw it
+        Ball ball = backend.getActiveBall();
+        if (ball != null){
+            ball.draw(g);
+        }
     }
     public void drawEnd(Graphics g){
 
