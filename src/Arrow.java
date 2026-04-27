@@ -4,7 +4,7 @@ public class Arrow{
     private int endX;
     private int endY;
     private double angle;
-    private Laser[] lasers;
+    private Ball[] balls;
     private static final int START_X = 265;
     private static final int START_Y = 370;
     private static final double SENSITIVITY = 0.05;
@@ -14,10 +14,6 @@ public class Arrow{
         this.endX = START_X + ARROW_LENGTH;
         this.endY = START_Y;
         this.angle = 0;
-    }
-
-    public void followCursor(int mouseX, int mouseY){
-
     }
 
     public void shoot(){
@@ -43,11 +39,23 @@ public class Arrow{
         g.drawLine(START_X, START_Y, endX, endY);
     }
 
-    public int getArrowEndX() {
+    public int getEndX() {
         return endX;
     }
 
-    public int getArrowEndY() {
+    public int getEndY() {
         return endY;
+    }
+
+    public double getAngle() {
+        return angle;
+    }
+
+    public int getStartX() {
+        return START_X;
+    }
+
+    public int getStartY() {
+        return START_Y;
     }
 }

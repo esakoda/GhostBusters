@@ -1,7 +1,10 @@
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import javax.swing.Timer;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
-public class Game implements KeyListener {
+public class Game implements KeyListener, ActionListener {
     private Arrow arrow;
     private Ghost[][] ghosts;
 
@@ -9,6 +12,10 @@ public class Game implements KeyListener {
     // TODO: do we even need this?
     private boolean gameOver;
     private int spawnInterval;
+    private Ball activeBall;
+    private Ghost lastHitGhost;
+    private Timer gameTimer;
+
     private GameView window;
 
     // Keeps track of the first column in the 2D array with a visible ghost
@@ -35,6 +42,8 @@ public class Game implements KeyListener {
 
     public static final int STEP_SIZE = 10;
 
+    public static final int SLEEP_TIME = 16;
+
     // Create a constant array of ghost colors
     public static final String[] ghostColors = {"Red", "Orange", "Yellow", "Green", "Blue", "Purple"};
 
@@ -60,6 +69,10 @@ public class Game implements KeyListener {
 
         this.window = new GameView(this);
         window.addKeyListener(this);
+
+        // Creates a timer that tells the game to do the actionPerformed method every SLEEP_TIME seconds
+        gameTimer = new Timer(SLEEP_TIME, this);
+        gameTimer.start();
 
         // TODO: add constants for the row/col size
     }
@@ -99,6 +112,10 @@ public class Game implements KeyListener {
         ghostPop(colorIndex, row, col + 1);
     }
 
+
+    public Ball getActiveBall(){
+        return activeBall;
+    }
 
     public void deleteGhost(){
 
@@ -172,6 +189,16 @@ public class Game implements KeyListener {
     }
 
     @Override
+    // Moves the ball / ball animation function
+    // Called every SLEEP_TIME by the Timer. If a ball is currently moving, move it one step and then repaint
+    public void actionPerformed(ActionEvent e){
+        if (activeBall != null) {
+            activeBall.move();
+        }
+        window.repaint();
+    }
+
+    @Override
     public void keyPressed(KeyEvent e) {
         switch(e.getKeyCode())
         {
@@ -183,11 +210,11 @@ public class Game implements KeyListener {
                 // Shifts angle down
                 arrow.shiftAngle(1);
                 break;
-            // TODO: get rid of, this is just a tester
             case KeyEvent.VK_SPACE:
-                // Enact that the top ghost was hit
-                Ghost deadGhost = ghosts[0][0];
-                ghostPop(deadGhost.getColorIndex(), 0, 0);
+                // Shoots out a ball
+                if (activeBall == null){
+                    activeBall = new Ball (arrow.getStartX(), arrow.getStartY(), arrow.getAngle());
+                }
                 break;
         }
         window.repaint();
