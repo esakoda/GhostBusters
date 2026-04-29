@@ -6,11 +6,17 @@ public class Game implements KeyListener {
     private Ghost[][] ghosts;
 
     private int score;
+    // TODO: do we even need this?
     private boolean gameOver;
     private int spawnInterval;
     private GameView window;
 
+    // Keeps track of the first column in the 2D array with a visible ghost
+    private int frontCol = 0;
+
     private int state;
+
+    public static final int GAME_OVER_BOUNDS = 150;
 
     // Magic Numbers for 2D Array
     public static final int GHOST_ROWS = 7;
@@ -18,7 +24,7 @@ public class Game implements KeyListener {
 
     public static final int GHOST_X_SPACING = 110;
     public static final int GHOST_Y_SPACING = 100;
-    public static final int GHOST_X_INITIAL = 550;
+    public static final int GHOST_X_INITIAL = 960;
     public static final int GHOST_Y_INITIAL = 50;
 
 
@@ -110,13 +116,43 @@ public class Game implements KeyListener {
 
     }
 
+    // TODO: in the future, we can make this more efficient, by deleting the rows or adding this into Ellens code
+    // Checks if the ghosts have hit the player. If so, game over.
     public void checkGameOver(){
+        // TODO: are there any edge cases? I feel like this is a little dangerous for index error
+        for (int row = 0; row < GHOST_ROWS; row++) {
+            Ghost currGhost = ghosts[row][frontCol];
 
+            // If there is a ghost isAlive and inside the boundaries of the person, game over
+            if (currGhost.isAlive() && currGhost.getX() <= GAME_OVER_BOUNDS) {
+                // Update the game state and boolean
+                this.state = STATE_END;
+                this.gameOver = true;
+
+                // Early exit to prevent redundancy
+                return;
+            }
+        }
+    }
+
+    // TODO: integrate with Ellen's code
+    // Updates the front column each time a ghost is hit
+    public void updateFrontCol() {
+        // Index through the different columns until we find the first alive Ghost
+        for (int col = 0; col < ghosts[0].length; col++) {
+            // For loop, goes through the current front column to check if it is still truly the front column
+            // If it is, can early exit
+
+            // if not, update frontCol++
+            // delate the front column
+
+        }
     }
 
     public void playGame(){
 
     }
+
 
     public static void main(String[] args){
         Game ghostBusters = new Game();
