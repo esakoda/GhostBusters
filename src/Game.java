@@ -126,12 +126,12 @@ public class Game implements KeyListener, ActionListener {
         int by2 = activeBall.getY() + Ball.RADIUS;
 
         // Nested loop that goes through every ghost and checks if ball hit - columns first for efficiency
-        for (int col = 0; col <GHOST_COL; col++){
+        for (int col = 0; col < GHOST_COL; col++){
             for (int row = 0; row < GHOST_ROWS; row++){
                 Ghost currGhost = ghosts[row][col];
 
                 // Skip if ghost is null (already hit or removed)
-                if (currGhost == null){
+                if (!currGhost.isAlive()){
                     continue;
                 }
 
@@ -227,12 +227,13 @@ public class Game implements KeyListener, ActionListener {
     // Moves the ball / ball animation function
     // Called every SLEEP_TIME by the Timer. If a ball is currently moving, move it one step and then repaint
     public void actionPerformed(ActionEvent e){
+        // Check if there is an active ball because if there is no ball we cant call checkBallHitGhost()
         if (activeBall != null) {
             activeBall.move();
 
             // Check if ghost was hit
             Ghost hitGhost = checkBallHitGhost();
-            if (hitGhost != null){
+            if (hitGhost.isAlive()){
                 // If an alive ghost was hit set variable to the correct ghost
                 lastHitGhost = hitGhost;
                 // Test

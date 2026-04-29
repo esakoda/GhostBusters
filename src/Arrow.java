@@ -39,6 +39,7 @@ public class Arrow{
         g.drawLine(START_X, START_Y, endX, endY);
     }
 
+    // Getter methods
     public int getEndX() {
         return endX;
     }
