@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferStrategy;
 
 public class GameView extends JFrame {
     private Game backend;
@@ -13,7 +14,7 @@ public class GameView extends JFrame {
         this.backend = backend;
 
         // Initialize background
-        this.background = new ImageIcon("resources/GhostBustersBackground.png").getImage();
+        this.background = new ImageIcon("resources/GhostBusterBackground (1400 x 880 px).png").getImage();
 
         // Initialize an array of different colored ghost images
         ghostImages[0] = new ImageIcon("resources/redGhost.png").getImage();
@@ -28,9 +29,29 @@ public class GameView extends JFrame {
         this.setTitle("GhostBusters");
         this.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
         this.setVisible(true);
+
+        createBufferStrategy(2);
     }
 
-    public void paint(Graphics g) {
+    // Paint method manages buffer
+    public void paint(Graphics g){
+        BufferStrategy bf = this.getBufferStrategy();
+        if (bf == null)
+            return;
+        Graphics g2 = null;
+        try {
+            g2 = bf.getDrawGraphics();
+            myPaint(g2);
+        }
+        finally {
+            g2.dispose();
+        }
+        bf.show();
+        Toolkit.getDefaultToolkit().sync();
+    }
+
+    // myPaint holds all drawing logic
+    public void myPaint(Graphics g) {
         int state = backend.getState();
 
         if (state == Game.STATE_TITLE) {
@@ -51,8 +72,17 @@ public class GameView extends JFrame {
 
     }
     public void drawGame(Graphics g){
+        // Draw background imgage
         g.drawImage(background,0,0,this);
+
+        // Draw arrow
         backend.getArrow().draw(g);
+
+        // Get current ball from backend and draw it
+        Ball ball = backend.getActiveBall();
+        if (ball != null){
+            ball.draw(g);
+        }
 
         Ghost[][] ghosts = backend.getGhosts();
 

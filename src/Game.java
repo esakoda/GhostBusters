@@ -1,7 +1,10 @@
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import javax.swing.Timer;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
-public class Game implements KeyListener {
+public class Game implements KeyListener, ActionListener {
     private Arrow arrow;
     private Ghost[][] ghosts;
 
@@ -9,6 +12,10 @@ public class Game implements KeyListener {
     // TODO: do we even need this?
     private boolean gameOver;
     private int spawnInterval;
+    private Ball activeBall;
+    private Ghost lastHitGhost;
+    private Timer gameTimer;
+
     private GameView window;
 
     // Keeps track of the first column in the 2D array with a visible ghost
@@ -35,6 +42,8 @@ public class Game implements KeyListener {
 
     public static final int STEP_SIZE = 10;
 
+    public static final int SLEEP_TIME = 16;
+
     // Create a constant array of ghost colors
     public static final String[] ghostColors = {"Red", "Orange", "Yellow", "Green", "Blue", "Purple"};
 
@@ -60,6 +69,10 @@ public class Game implements KeyListener {
 
         this.window = new GameView(this);
         window.addKeyListener(this);
+
+        // Creates a timer that tells the game to do the actionPerformed method every SLEEP_TIME seconds
+        gameTimer = new Timer(SLEEP_TIME, this);
+        gameTimer.start();
 
         // TODO: add constants for the row/col size
     }
@@ -99,6 +112,45 @@ public class Game implements KeyListener {
         ghostPop(colorIndex, row, col + 1);
     }
 
+
+    public Ball getActiveBall(){
+        return activeBall;
+    }
+
+    // Function for checking if a ball has hit a ghost
+    public Ghost checkBallHitGhost(){
+        // Ball dimensions
+        int bx1 = activeBall.getX() - Ball.RADIUS;
+        int bx2 = activeBall.getX() + Ball.RADIUS;
+        int by1 = activeBall.getY() - Ball.RADIUS;
+        int by2 = activeBall.getY() + Ball.RADIUS;
+
+        // Nested loop that goes through every ghost and checks if ball hit - columns first for efficiency
+        for (int col = 0; col < GHOST_COL; col++){
+            for (int row = 0; row < GHOST_ROWS; row++){
+                Ghost currGhost = ghosts[row][col];
+
+                // Skip if ghost is null (already hit or removed)
+                if (!currGhost.isAlive()){
+                    continue;
+                }
+
+                // Current Ghost dimensions
+                int gx1 = currGhost.getX();
+                int gx2 = currGhost.getX() + Ghost.GHOST_WIDTH;
+                int gy1 = currGhost.getY();
+                int gy2 = currGhost.getY() + Ghost.GHOST_HEIGHT;
+
+                // Checks if the ball has collided with the Ghost and if so returns that Ghost
+                if (bx2 >= gx1 && bx1 <= gx2 && by1 <= gy2 && by2 >= gy1){
+                    return currGhost;
+                }
+            }
+        }
+
+        // No collision found
+        return null;
+    }
 
     public void deleteGhost(){
 
@@ -172,6 +224,26 @@ public class Game implements KeyListener {
     }
 
     @Override
+    // Moves the ball / ball animation function
+    // Called every SLEEP_TIME by the Timer. If a ball is currently moving, move it one step and then repaint
+    public void actionPerformed(ActionEvent e){
+        // Check if there is an active ball because if there is no ball we cant call checkBallHitGhost()
+        if (activeBall != null) {
+            activeBall.move();
+
+            // Check if ghost was hit
+            Ghost hitGhost = checkBallHitGhost();
+            if (hitGhost.isAlive()){
+                // If an alive ghost was hit set variable to the correct ghost
+                lastHitGhost = hitGhost;
+                // Test
+                System.out.println("Hit ghost at (" + lastHitGhost.getX() + ", " + lastHitGhost.getY() + ") color: " + lastHitGhost.getColorIndex());
+            }
+        }
+        window.repaint();
+    }
+
+    @Override
     public void keyPressed(KeyEvent e) {
         switch(e.getKeyCode())
         {
@@ -183,11 +255,11 @@ public class Game implements KeyListener {
                 // Shifts angle down
                 arrow.shiftAngle(1);
                 break;
-            // TODO: get rid of, this is just a tester
             case KeyEvent.VK_SPACE:
-                // Enact that the top ghost was hit
-                Ghost deadGhost = ghosts[0][0];
-                ghostPop(deadGhost.getColorIndex(), 0, 0);
+                // Shoots out a ball
+                if (activeBall == null){
+                    activeBall = new Ball (arrow.getStartX(), arrow.getStartY(), arrow.getAngle());
+                }
                 break;
         }
         window.repaint();
