@@ -3,8 +3,8 @@ import java.awt.*;
 
 public class GameView extends JFrame {
     private Game backend;
-    public final int WINDOW_WIDTH = 1000;
-    public final int WINDOW_HEIGHT = 800;
+    public final int WINDOW_WIDTH = 1400;
+    public final int WINDOW_HEIGHT = 880;
     private Image background;
 
     private Image[] ghostImages = new Image[6];
