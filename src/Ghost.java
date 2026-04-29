@@ -7,6 +7,9 @@ public class Ghost {
 
     private boolean isAlive;
 
+    public static final int GHOST_WIDTH = 80;
+    public static final int GHOST_HEIGHT = 80;
+
     public Ghost(int colorIndex, int x, int y, boolean isAlive){
         this.colorIndex = colorIndex;
         this.x = x;

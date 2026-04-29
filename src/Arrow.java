@@ -5,8 +5,8 @@ public class Arrow{
     private int endY;
     private double angle;
     private Ball[] balls;
-    private static final int START_X = 265;
-    private static final int START_Y = 370;
+    private static final int START_X = 282;
+    private static final int START_Y = 407;
     private static final double SENSITIVITY = 0.05;
     private static final int ARROW_LENGTH = 100;
 

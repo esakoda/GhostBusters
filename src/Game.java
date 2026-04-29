@@ -117,6 +117,41 @@ public class Game implements KeyListener, ActionListener {
         return activeBall;
     }
 
+    // Function for checking if a ball has hit a ghost
+    public Ghost checkBallHitGhost(){
+        // Ball dimensions
+        int bx1 = activeBall.getX() - Ball.RADIUS;
+        int bx2 = activeBall.getX() + Ball.RADIUS;
+        int by1 = activeBall.getY() - Ball.RADIUS;
+        int by2 = activeBall.getY() + Ball.RADIUS;
+
+        // Nested loop that goes through every ghost and checks if ball hit - columns first for efficiency
+        for (int col = 0; col <GHOST_COL; col++){
+            for (int row = 0; row < GHOST_ROWS; row++){
+                Ghost currGhost = ghosts[row][col];
+
+                // Skip if ghost is null (already hit or removed)
+                if (currGhost == null){
+                    continue;
+                }
+
+                // Current Ghost dimensions
+                int gx1 = currGhost.getX();
+                int gx2 = currGhost.getX() + Ghost.GHOST_WIDTH;
+                int gy1 = currGhost.getY();
+                int gy2 = currGhost.getY() + Ghost.GHOST_HEIGHT;
+
+                // Checks if the ball has collided with the Ghost and if so returns that Ghost
+                if (bx2 >= gx1 && bx1 <= gx2 && by1 <= gy2 && by2 >= gy1){
+                    return currGhost;
+                }
+            }
+        }
+
+        // No collision found
+        return null;
+    }
+
     public void deleteGhost(){
 
     }
@@ -194,6 +229,15 @@ public class Game implements KeyListener, ActionListener {
     public void actionPerformed(ActionEvent e){
         if (activeBall != null) {
             activeBall.move();
+
+            // Check if ghost was hit
+            Ghost hitGhost = checkBallHitGhost();
+            if (hitGhost != null){
+                // If an alive ghost was hit set variable to the correct ghost
+                lastHitGhost = hitGhost;
+                // Test
+                System.out.println("Hit ghost at (" + lastHitGhost.getX() + ", " + lastHitGhost.getY() + ") color: " + lastHitGhost.getColorIndex());
+            }
         }
         window.repaint();
     }

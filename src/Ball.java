@@ -12,9 +12,9 @@ public class Ball {
 
     // Wall boundaries
     public static final int LEFT_WALL = 0;
-    public static final int RIGHT_WALL = 1000;
+    public static final int RIGHT_WALL = 1400;
     public static final int TOP_WALL = 0;
-    public static final int BOTTOM_WALL = 800;
+    public static final int BOTTOM_WALL = 880;
 
     public Ball(int startX, int startY, double angle){
         this.x = startX;
