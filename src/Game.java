@@ -195,13 +195,39 @@ public class Game implements KeyListener, ActionListener {
     public void updateFrontCol() {
         // Index through the different columns until we find the first alive Ghost
         for (int col = 0; col < ghosts[0].length; col++) {
-            // For loop, goes through the current front column to check if it is still truly the front column
-            // If it is, can early exit
+            // Loop through the column to find a valid, alive Ghost
+            for (int row = 0; row < GHOST_ROWS; row++) {
+                // If it is, can early exit
+                if (ghosts[row][col].isAlive()) {
+                    return;
+                }
+            }
 
-            // if not, update frontCol++
-            // delate the front column
-
+            // If no ghosts were found, col is empty, so update frontCol counter
+            frontCol++;
+            // Delete the first column
+            reindexGhosts();
         }
+    }
+
+    public void reindexGhosts() {
+        // Number of columns in new array
+        int numCols = ghosts[0].length - frontCol;
+
+        // Create temp 2D array
+        // TODO: is putting it in the calculations in there ok?
+        Ghost[][] condenseGhost = new Ghost[GHOST_ROWS][];
+
+        // Determine new width based on starting point: frontCol
+        for (int row = 0; row < ghosts.length; row++) {
+            for (int col = 0; col < numCols; col++) {
+                condenseGhost[row][numCols] = ghosts[row][col + frontCol];
+            }
+        }
+
+        ghosts = condenseGhost;
+        // TODO: check if this is even necessary...
+        frontCol = 0;
     }
 
     // Move the array of ghosts toward the user
