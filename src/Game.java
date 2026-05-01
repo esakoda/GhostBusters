@@ -15,6 +15,7 @@ public class Game implements KeyListener, ActionListener {
     private Ball activeBall;
     private Ghost lastHitGhost;
     private Timer gameTimer;
+    private double shiftAmount;
 
     private GameView window;
 
@@ -50,6 +51,7 @@ public class Game implements KeyListener, ActionListener {
     public Game(){
         state = STATE_GAME;
         arrow = new Arrow();
+        shiftAmount = 0.2;
 
         // TODO: TEMPORARY SOLUTION
         // Create a 2D array, representing a grid of ghosts
@@ -136,10 +138,10 @@ public class Game implements KeyListener, ActionListener {
                 }
 
                 // Current Ghost dimensions
-                int gx1 = currGhost.getX();
-                int gx2 = currGhost.getX() + Ghost.GHOST_WIDTH;
-                int gy1 = currGhost.getY();
-                int gy2 = currGhost.getY() + Ghost.GHOST_HEIGHT;
+                double gx1 = currGhost.getX();
+                double gx2 = currGhost.getX() + Ghost.GHOST_WIDTH;
+                double gy1 = currGhost.getY();
+                double gy2 = currGhost.getY() + Ghost.GHOST_HEIGHT;
 
                 // Checks if the ball has collided with the Ghost and if so returns that Ghost
                 if (bx2 >= gx1 && bx1 <= gx2 && by1 <= gy2 && by2 >= gy1){
@@ -150,10 +152,6 @@ public class Game implements KeyListener, ActionListener {
 
         // No collision found
         return null;
-    }
-
-    public void deleteGhost(){
-
     }
 
     public void spawnGhost(){
@@ -201,6 +199,15 @@ public class Game implements KeyListener, ActionListener {
         }
     }
 
+    // Move the array of ghosts toward the user
+    public void moveGhosts(){
+        for (int i = 0; i < ghosts.length; i++){
+            for (int j = 0; j < ghosts[i].length; j++){
+                ghosts[i][j].setX(ghosts[i][j].getX() - shiftAmount);
+            }
+        }
+    }
+
     public void playGame(){
 
     }
@@ -227,6 +234,8 @@ public class Game implements KeyListener, ActionListener {
     // Moves the ball / ball animation function
     // Called every SLEEP_TIME by the Timer. If a ball is currently moving, move it one step and then repaint
     public void actionPerformed(ActionEvent e){
+        // Move the ghosts across the screen every time
+        moveGhosts();
         // Check if there is an active ball because if there is no ball we cant call checkBallHitGhost()
         if (activeBall != null) {
             activeBall.move();
