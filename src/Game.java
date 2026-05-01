@@ -63,7 +63,7 @@ public class Game implements KeyListener, ActionListener {
                 // Calculate each ghost's starting x and y positions based on row/col
                 int startX = col * GHOST_X_SPACING + GHOST_X_INITIAL;
                 int startY = row * GHOST_Y_SPACING + GHOST_Y_INITIAL;
-                ghosts[row][col] = new Ghost(randomColorIndex, startX, startY, true);
+                ghosts[row][col] = new Ghost(randomColorIndex, startX, startY, row, col, true);
             }
         }
 
@@ -233,11 +233,17 @@ public class Game implements KeyListener, ActionListener {
 
             // Check if ghost was hit
             Ghost hitGhost = checkBallHitGhost();
+            if (hitGhost == null){
+                window.repaint();
+                return;
+            }
             if (hitGhost.isAlive()){
                 // If an alive ghost was hit set variable to the correct ghost
                 lastHitGhost = hitGhost;
-                // Test
-                System.out.println("Hit ghost at (" + lastHitGhost.getX() + ", " + lastHitGhost.getY() + ") color: " + lastHitGhost.getColorIndex());
+                // Mark the ghost as not visible and the neighbor ghosts of the same color
+                ghostPop(hitGhost.getColorIndex(), hitGhost.getRow(), hitGhost.getCol());
+                // Delete the ball
+                activeBall = null;
             }
         }
         window.repaint();
