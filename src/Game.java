@@ -212,11 +212,11 @@ public class Game implements KeyListener, ActionListener {
 
     public void reindexGhosts() {
         // Number of columns in new array
-        int numCols = ghosts[0].length - frontCol;
+        int numCols = ghosts[0].length - 1;
 
         // Create temp 2D array
         // TODO: is putting it in the calculations in there ok?
-        Ghost[][] condenseGhost = new Ghost[GHOST_ROWS][];
+        Ghost[][] condenseGhost = new Ghost[GHOST_ROWS][numCols];
 
         // Determine new width based on starting point: frontCol
         for (int row = 0; row < ghosts.length; row++) {
