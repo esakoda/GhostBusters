@@ -16,6 +16,7 @@ public class Game implements KeyListener, ActionListener {
     private Ghost lastHitGhost;
     private Timer gameTimer;
     private double shiftAmount;
+    private int timer;
 
     private GameView window;
 
@@ -44,6 +45,8 @@ public class Game implements KeyListener, ActionListener {
     public static final int STEP_SIZE = 10;
 
     public static final int SLEEP_TIME = 16;
+    public static final int INCREASE_SPEED_TIME = 313;
+    public static final double INCREASE_SPEED_AMOUNT = 3;
 
     // Create a constant array of ghost colors
     public static final String[] ghostColors = {"Red", "Orange", "Yellow", "Green", "Blue", "Purple"};
@@ -52,6 +55,7 @@ public class Game implements KeyListener, ActionListener {
         state = STATE_GAME;
         arrow = new Arrow();
         shiftAmount = 0.2;
+        timer = INCREASE_SPEED_TIME;
 
         // TODO: TEMPORARY SOLUTION
         // Create a 2D array, representing a grid of ghosts
@@ -234,6 +238,14 @@ public class Game implements KeyListener, ActionListener {
     // Moves the ball / ball animation function
     // Called every SLEEP_TIME by the Timer. If a ball is currently moving, move it one step and then repaint
     public void actionPerformed(ActionEvent e){
+        // Decrease timer
+        timer--;
+        if (timer <= 0){
+            // Increase speed of ghosts
+            shiftAmount = shiftAmount * INCREASE_SPEED_AMOUNT;
+            // Reset timer
+            timer = INCREASE_SPEED_TIME;
+        }
         // Move the ghosts across the screen every time
         moveGhosts();
         // Check if there is an active ball because if there is no ball we cant call checkBallHitGhost()
