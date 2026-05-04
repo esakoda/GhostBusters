@@ -47,6 +47,7 @@ public class Game implements KeyListener, ActionListener {
     public static final int SLEEP_TIME = 16;
     public static final int INCREASE_SPEED_TIME = 313;
     public static final double INCREASE_SPEED_AMOUNT = 3;
+    public static final double STARTING_SHIFT_AMOUNT = 0.2;
 
     // Create a constant array of ghost colors
     public static final String[] ghostColors = {"Red", "Orange", "Yellow", "Green", "Blue", "Purple"};
@@ -54,7 +55,7 @@ public class Game implements KeyListener, ActionListener {
     public Game(){
         state = STATE_GAME;
         arrow = new Arrow();
-        shiftAmount = 0.2;
+        shiftAmount = STARTING_SHIFT_AMOUNT;
         timer = INCREASE_SPEED_TIME;
 
         // TODO: TEMPORARY SOLUTION
