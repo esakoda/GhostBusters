@@ -206,7 +206,6 @@ public class Game implements KeyListener, ActionListener {
 
     public void reindexGhosts() {
         // Create temp 2D array
-        // TODO: is putting it in the calculations in there ok?
         Ghost[][] condenseGhost = new Ghost[GHOST_ROWS][GHOST_COL];
 
         // Determine new width based on starting point: frontCol
@@ -222,8 +221,8 @@ public class Game implements KeyListener, ActionListener {
             int randomColorIndex = (int) (Math.random() * 6);
 
             // Calculate each ghost's starting x and y positions based on row/col
-            int startX = lastCol * GHOST_X_SPACING + condenseGhost[0][0].getX();
-            int startY = row * GHOST_Y_SPACING + GHOST_Y_INITIAL;
+            double startX = lastCol * GHOST_X_SPACING + condenseGhost[0][0].getX();
+            double startY = row * GHOST_Y_SPACING + GHOST_Y_INITIAL;
             condenseGhost[row][lastCol] = new Ghost(randomColorIndex, startX, startY, row, lastCol, true);
         }
 
