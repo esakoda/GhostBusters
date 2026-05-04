@@ -20,21 +20,18 @@ public class Game implements KeyListener, ActionListener {
 
     private GameView window;
 
-    // Keeps track of the first column in the 2D array with a visible ghost
-    private int frontCol = 0;
-
     private int state;
 
-    public static final int GAME_OVER_BOUNDS = 150;
+    public static final int GAME_OVER_BOUNDS = 185;
 
     // Magic Numbers for 2D Array
     public static final int GHOST_ROWS = 7;
-    public static final int GHOST_COL = 4;
+    public static final int GHOST_COL = 12;
 
     public static final int GHOST_X_SPACING = 110;
     public static final int GHOST_Y_SPACING = 100;
     public static final int GHOST_X_INITIAL = 960;
-    public static final int GHOST_Y_INITIAL = 50;
+    public static final int GHOST_Y_INITIAL = 75;
 
 
     public static final int STATE_TITLE = 0;
@@ -58,13 +55,12 @@ public class Game implements KeyListener, ActionListener {
         shiftAmount = STARTING_SHIFT_AMOUNT;
         timer = INCREASE_SPEED_TIME;
 
-        // TODO: TEMPORARY SOLUTION
         // Create a 2D array, representing a grid of ghosts
         this.ghosts = new Ghost[GHOST_ROWS][GHOST_COL];
 
         // Index through the empty array to create individual ghost objects
-        for (int row = 0; row < ghosts.length; row++) {
-            for (int col = 0; col < ghosts[row].length; col++) {
+        for (int row = 0; row < GHOST_ROWS; row++) {
+            for (int col = 0; col < GHOST_COL; col++) {
                 int randomColorIndex = (int) (Math.random() * 6);
 
                 // Calculate each ghost's starting x and y positions based on row/col
@@ -176,7 +172,7 @@ public class Game implements KeyListener, ActionListener {
     public void checkGameOver(){
         // TODO: are there any edge cases? I feel like this is a little dangerous for index error
         for (int row = 0; row < GHOST_ROWS; row++) {
-            Ghost currGhost = ghosts[row][frontCol];
+            Ghost currGhost = ghosts[row][0];
 
             // If there is a ghost isAlive and inside the boundaries of the person, game over
             if (currGhost.isAlive() && currGhost.getX() <= GAME_OVER_BOUNDS) {
@@ -194,14 +190,43 @@ public class Game implements KeyListener, ActionListener {
     // Updates the front column each time a ghost is hit
     public void updateFrontCol() {
         // Index through the different columns until we find the first alive Ghost
-        for (int col = 0; col < ghosts[0].length; col++) {
-            // For loop, goes through the current front column to check if it is still truly the front column
-            // If it is, can early exit
+        for (int col = 0; col < GHOST_COL; col++) {
+            // Loop through the column to find a valid, alive Ghost
+            for (int row = 0; row < GHOST_ROWS; row++) {
+                // If it is, can early exit
+                if (ghosts[row][col].isAlive()) {
+                    return;
+                }
+            }
 
-            // if not, update frontCol++
-            // delate the front column
-
+            // Delete the first column
+            reindexGhosts();
         }
+    }
+
+    public void reindexGhosts() {
+        // Create temp 2D array
+        Ghost[][] condenseGhost = new Ghost[GHOST_ROWS][GHOST_COL];
+
+        // Determine new width based on starting point: frontCol
+        for (int row = 0; row < GHOST_ROWS; row++) {
+            for (int col = 1; col < GHOST_COL; col++) {
+                condenseGhost[row][col - 1] = ghosts[row][col];
+            }
+        }
+
+        // Make the new last column of ghosts
+        int lastCol = GHOST_COL - 1;
+        for (int row = 0; row < GHOST_ROWS; row++) {
+            int randomColorIndex = (int) (Math.random() * 6);
+
+            // Calculate each ghost's starting x and y positions based on row/col
+            double startX = lastCol * GHOST_X_SPACING + condenseGhost[0][0].getX();
+            double startY = row * GHOST_Y_SPACING + GHOST_Y_INITIAL;
+            condenseGhost[row][lastCol] = new Ghost(randomColorIndex, startX, startY, row, lastCol, true);
+        }
+
+        ghosts = condenseGhost;
     }
 
     // Move the array of ghosts toward the user
@@ -289,6 +314,8 @@ public class Game implements KeyListener, ActionListener {
                     activeBall = new Ball (arrow.getStartX(), arrow.getStartY(), arrow.getAngle());
                 }
                 break;
+            case KeyEvent.VK_Q:
+                state = STATE_END;
         }
         window.repaint();
     }
