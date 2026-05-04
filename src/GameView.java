@@ -99,6 +99,8 @@ public class GameView extends JFrame {
         }
     }
     public void drawEnd(Graphics g){
-
+        //
+        g.setColor(Color.ORANGE);
+        g.fillRect(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
     }
 }

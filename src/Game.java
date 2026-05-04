@@ -314,6 +314,8 @@ public class Game implements KeyListener, ActionListener {
                     activeBall = new Ball (arrow.getStartX(), arrow.getStartY(), arrow.getAngle());
                 }
                 break;
+            case KeyEvent.VK_Q:
+                state = STATE_END;
         }
         window.repaint();
     }
