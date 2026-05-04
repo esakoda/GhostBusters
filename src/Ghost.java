@@ -1,6 +1,6 @@
 public class Ghost {
-    private int x;
-    private int y;
+    private double x;
+    private double y;
     private int row;
     private int col;
     private int colorIndex;
@@ -12,7 +12,7 @@ public class Ghost {
     public static final int GHOST_WIDTH = 80;
     public static final int GHOST_HEIGHT = 80;
 
-    public Ghost(int colorIndex, int x, int y, int row, int col, boolean isAlive){
+    public Ghost(int colorIndex, double x, double y, int row, int col, boolean isAlive){
         this.colorIndex = colorIndex;
         this.x = x;
         this.y = y;
@@ -22,11 +22,11 @@ public class Ghost {
     }
 
     // Getter methods
-    public int getX() {
+    public double getX() {
         return this.x;
     }
 
-    public int getY() {
+    public double getY() {
         return this.y;
     }
 
@@ -47,6 +47,7 @@ public class Ghost {
         this.isAlive = isAlive;
     }
 
+    public void setX(double x){ this.x = x; }
 
     public void hasValidNeighbor(){
 

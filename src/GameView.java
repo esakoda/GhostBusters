@@ -93,7 +93,7 @@ public class GameView extends JFrame {
                     Image ghostImage = ghostImages[currGhost.getColorIndex()];
 
                     // Draw ghost with it's x and y coor
-                    g.drawImage(ghostImage, currGhost.getX(), currGhost.getY(), this);
+                    g.drawImage(ghostImage, (int) currGhost.getX(), (int) currGhost.getY(), this);
                 }
             }
         }

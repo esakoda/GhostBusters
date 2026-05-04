@@ -15,6 +15,8 @@ public class Game implements KeyListener, ActionListener {
     private Ball activeBall;
     private Ghost lastHitGhost;
     private Timer gameTimer;
+    private double shiftAmount;
+    private int timer;
 
     private GameView window;
 
@@ -43,6 +45,9 @@ public class Game implements KeyListener, ActionListener {
     public static final int STEP_SIZE = 10;
 
     public static final int SLEEP_TIME = 16;
+    public static final int INCREASE_SPEED_TIME = 313;
+    public static final double INCREASE_SPEED_AMOUNT = 3;
+    public static final double STARTING_SHIFT_AMOUNT = 0.2;
 
     // Create a constant array of ghost colors
     public static final String[] ghostColors = {"Red", "Orange", "Yellow", "Green", "Blue", "Purple"};
@@ -50,6 +55,8 @@ public class Game implements KeyListener, ActionListener {
     public Game(){
         state = STATE_GAME;
         arrow = new Arrow();
+        shiftAmount = STARTING_SHIFT_AMOUNT;
+        timer = INCREASE_SPEED_TIME;
 
         // TODO: TEMPORARY SOLUTION
         // Create a 2D array, representing a grid of ghosts
@@ -136,10 +143,10 @@ public class Game implements KeyListener, ActionListener {
                 }
 
                 // Current Ghost dimensions
-                int gx1 = currGhost.getX();
-                int gx2 = currGhost.getX() + Ghost.GHOST_WIDTH;
-                int gy1 = currGhost.getY();
-                int gy2 = currGhost.getY() + Ghost.GHOST_HEIGHT;
+                double gx1 = currGhost.getX();
+                double gx2 = currGhost.getX() + Ghost.GHOST_WIDTH;
+                double gy1 = currGhost.getY();
+                double gy2 = currGhost.getY() + Ghost.GHOST_HEIGHT;
 
                 // Checks if the ball has collided with the Ghost and if so returns that Ghost
                 if (bx2 >= gx1 && bx1 <= gx2 && by1 <= gy2 && by2 >= gy1){
@@ -150,10 +157,6 @@ public class Game implements KeyListener, ActionListener {
 
         // No collision found
         return null;
-    }
-
-    public void deleteGhost(){
-
     }
 
     public void spawnGhost(){
@@ -201,6 +204,15 @@ public class Game implements KeyListener, ActionListener {
         }
     }
 
+    // Move the array of ghosts toward the user
+    public void moveGhosts(){
+        for (int i = 0; i < ghosts.length; i++){
+            for (int j = 0; j < ghosts[i].length; j++){
+                ghosts[i][j].setX(ghosts[i][j].getX() - shiftAmount);
+            }
+        }
+    }
+
     public void playGame(){
 
     }
@@ -227,6 +239,16 @@ public class Game implements KeyListener, ActionListener {
     // Moves the ball / ball animation function
     // Called every SLEEP_TIME by the Timer. If a ball is currently moving, move it one step and then repaint
     public void actionPerformed(ActionEvent e){
+        // Decrease timer
+        timer--;
+        if (timer <= 0){
+            // Increase speed of ghosts
+            shiftAmount = shiftAmount * INCREASE_SPEED_AMOUNT;
+            // Reset timer
+            timer = INCREASE_SPEED_TIME;
+        }
+        // Move the ghosts across the screen every time
+        moveGhosts();
         // Check if there is an active ball because if there is no ball we cant call checkBallHitGhost()
         if (activeBall != null) {
             activeBall.move();
