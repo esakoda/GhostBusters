@@ -32,6 +32,9 @@ public class Ghost {
 
     public int getCol() { return this.col; }
 
+    public void setCol(int col) {
+        this.col = col;
+    }
     public int getRow() { return this.row; }
 
     public int getColorIndex() {

@@ -9,8 +9,6 @@ public class Game implements KeyListener, ActionListener {
     private Ghost[][] ghosts;
 
     private int score;
-    // TODO: do we even need this?
-    private boolean gameOver;
     private int spawnInterval;
     private Ball activeBall;
     private Ghost lastHitGhost;
@@ -167,7 +165,6 @@ public class Game implements KeyListener, ActionListener {
 
     }
 
-    // TODO: in the future, we can make this more efficient, by deleting the rows or adding this into Ellens code
     // Checks if the ghosts have hit the player. If so, game over.
     public void checkGameOver(){
         // TODO: are there any edge cases? I feel like this is a little dangerous for index error
@@ -176,9 +173,8 @@ public class Game implements KeyListener, ActionListener {
 
             // If there is a ghost isAlive and inside the boundaries of the person, game over
             if (currGhost.isAlive() && currGhost.getX() <= GAME_OVER_BOUNDS) {
-                // Update the game state and boolean
+                // Update the state
                 this.state = STATE_END;
-                this.gameOver = true;
 
                 // Early exit to prevent redundancy
                 return;
@@ -189,17 +185,18 @@ public class Game implements KeyListener, ActionListener {
     // TODO: integrate with Ellen's code
     // Updates the front column each time a ghost is hit
     public void updateFrontCol() {
-        // Index through the different columns until we find the first alive Ghost
+        // Continues to index through the array, if we haven't found a single valid column
+        // Acts as an infinite loop with a limit to prevent index out of bounds error
         for (int col = 0; col < GHOST_COL; col++) {
-            // Loop through the column to find a valid, alive Ghost
+            // Loop through the first column to find a valid, alive Ghost
             for (int row = 0; row < GHOST_ROWS; row++) {
-                // If it is, can early exit
-                if (ghosts[row][col].isAlive()) {
+                // If we find a valid living ghost, can early exit
+                if (ghosts[row][0].isAlive()) {
                     return;
                 }
             }
 
-            // Delete the first column
+            // Delete the first column if no valid ghost
             reindexGhosts();
         }
     }
@@ -211,7 +208,13 @@ public class Game implements KeyListener, ActionListener {
         // Determine new width based on starting point: frontCol
         for (int row = 0; row < GHOST_ROWS; row++) {
             for (int col = 1; col < GHOST_COL; col++) {
-                condenseGhost[row][col - 1] = ghosts[row][col];
+                // Update the ghosts column value
+                Ghost currGhost = ghosts[row][col];
+
+                // Shift the currGhost column value
+                currGhost.setCol(col - 1);
+
+                condenseGhost[row][col - 1] = currGhost;
             }
         }
 
@@ -264,6 +267,10 @@ public class Game implements KeyListener, ActionListener {
     // Moves the ball / ball animation function
     // Called every SLEEP_TIME by the Timer. If a ball is currently moving, move it one step and then repaint
     public void actionPerformed(ActionEvent e){
+        // CHeck if game over
+        if (state != STATE_GAME) {
+            return;
+        }
         // Decrease timer
         timer--;
         if (timer <= 0){
@@ -274,6 +281,10 @@ public class Game implements KeyListener, ActionListener {
         }
         // Move the ghosts across the screen every time
         moveGhosts();
+
+        // Given ghosts just moved, checked if it crossed the bounds
+        checkGameOver();
+
         // Check if there is an active ball because if there is no ball we cant call checkBallHitGhost()
         if (activeBall != null) {
             activeBall.move();
@@ -289,6 +300,10 @@ public class Game implements KeyListener, ActionListener {
                 lastHitGhost = hitGhost;
                 // Mark the ghost as not visible and the neighbor ghosts of the same color
                 ghostPop(hitGhost.getColorIndex(), hitGhost.getRow(), hitGhost.getCol());
+
+                // Check if clearing those ghosts emptied the front column
+                updateFrontCol();
+
                 // Delete the ball
                 activeBall = null;
             }
