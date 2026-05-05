@@ -5,8 +5,6 @@ public class Ghost {
     private int col;
     private int colorIndex;
 
-    private double speed;
-
     private boolean isAlive;
 
     public static final int GHOST_WIDTH = 80;
@@ -51,24 +49,4 @@ public class Ghost {
     }
 
     public void setX(double x){ this.x = x; }
-
-    public void hasValidNeighbor(){
-
-    }
-
-    public void hasNeighbor(){
-
-    }
-
-    public void moveLeft(){
-
-    }
-
-    public void increaseSpeed(double amt){
-
-    }
-
-    public void hitLine(){
-
-    }
 }

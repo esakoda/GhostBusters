@@ -8,10 +8,7 @@ public class Game implements KeyListener, ActionListener {
     private Arrow arrow;
     private Ghost[][] ghosts;
 
-    private int score;
-    private int spawnInterval;
     private Ball activeBall;
-    private Ghost lastHitGhost;
     private Timer gameTimer;
     private double shiftAmount;
     private int timer;
@@ -37,15 +34,10 @@ public class Game implements KeyListener, ActionListener {
     public static final int STATE_GAME = 2;
     public static final int STATE_END = 3;
 
-    public static final int STEP_SIZE = 10;
-
     public static final int SLEEP_TIME = 16;
     public static final int INCREASE_SPEED_TIME = 313;
-    public static final double INCREASE_SPEED_AMOUNT = 3;
+    public static final double INCREASE_SPEED_AMOUNT = 1.15;
     public static final double STARTING_SHIFT_AMOUNT = 0.2;
-
-    // Create a constant array of ghost colors
-    public static final String[] ghostColors = {"Red", "Orange", "Yellow", "Green", "Blue", "Purple"};
 
     public Game(){
         state = STATE_GAME;
@@ -153,18 +145,6 @@ public class Game implements KeyListener, ActionListener {
         return null;
     }
 
-    public void spawnGhost(){
-
-    }
-
-    public void update(){
-
-    }
-
-    public void rampUpDifficulty(){
-
-    }
-
     // Checks if the ghosts have hit the player. If so, game over.
     public void checkGameOver(){
         // TODO: are there any edge cases? I feel like this is a little dangerous for index error
@@ -241,15 +221,6 @@ public class Game implements KeyListener, ActionListener {
         }
     }
 
-    public void playGame(){
-
-    }
-
-
-    public static void main(String[] args){
-        Game ghostBusters = new Game();
-    }
-
     public int getState() {
         return state;
     }
@@ -296,8 +267,6 @@ public class Game implements KeyListener, ActionListener {
                 return;
             }
             if (hitGhost.isAlive()){
-                // If an alive ghost was hit set variable to the correct ghost
-                lastHitGhost = hitGhost;
                 // Mark the ghost as not visible and the neighbor ghosts of the same color
                 ghostPop(hitGhost.getColorIndex(), hitGhost.getRow(), hitGhost.getCol());
 
@@ -329,8 +298,6 @@ public class Game implements KeyListener, ActionListener {
                     activeBall = new Ball (arrow.getStartX(), arrow.getStartY(), arrow.getAngle());
                 }
                 break;
-            case KeyEvent.VK_Q:
-                state = STATE_END;
         }
         window.repaint();
     }
@@ -338,5 +305,9 @@ public class Game implements KeyListener, ActionListener {
     @Override
     public void keyReleased(KeyEvent e) {
 
+    }
+
+    public static void main(String[] args){
+        Game ghostBusters = new Game();
     }
 }

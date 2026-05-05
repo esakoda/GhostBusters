@@ -4,24 +4,15 @@ public class Arrow{
     private int endX;
     private int endY;
     private double angle;
-    private Ball[] balls;
     private static final int START_X = 282;
     private static final int START_Y = 407;
-    private static final double SENSITIVITY = 0.05;
+    private static final double SENSITIVITY = 0.07;
     private static final int ARROW_LENGTH = 100;
 
     public Arrow(){
         this.endX = START_X + ARROW_LENGTH;
         this.endY = START_Y;
         this.angle = 0;
-    }
-
-    public void shoot(){
-
-    }
-
-    public void moveLasers(){
-
     }
 
     // Shift the angle of the arrow based on user input

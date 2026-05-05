@@ -68,9 +68,11 @@ public class GameView extends JFrame {
     public void drawTitle(Graphics g) {
 
     }
+
     public void drawInstructions(Graphics g) {
 
     }
+
     public void drawGame(Graphics g){
         // Draw background imgage
         g.drawImage(background,0,0,this);
@@ -98,8 +100,8 @@ public class GameView extends JFrame {
             }
         }
     }
+
     public void drawEnd(Graphics g){
-        //
         g.setColor(Color.ORANGE);
         g.fillRect(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
     }
