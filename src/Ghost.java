@@ -3,8 +3,8 @@ public class Ghost {
     private double y;
     private int row;
     private int col;
-    private int colorIndex;
 
+    private int colorIndex;
     private boolean isAlive;
 
     public static final int GHOST_WIDTH = 80;
@@ -30,9 +30,6 @@ public class Ghost {
 
     public int getCol() { return this.col; }
 
-    public void setCol(int col) {
-        this.col = col;
-    }
     public int getRow() { return this.row; }
 
     public int getColorIndex() {
@@ -49,4 +46,8 @@ public class Ghost {
     }
 
     public void setX(double x){ this.x = x; }
+
+    public void setCol(int col) {
+        this.col = col;
+    }
 }
