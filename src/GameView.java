@@ -4,11 +4,13 @@ import java.awt.image.BufferStrategy;
 
 public class GameView extends JFrame {
     private Game backend;
-    public final int WINDOW_WIDTH = 1400;
-    public final int WINDOW_HEIGHT = 880;
     private Image background;
 
-    private Image[] ghostImages = new Image[6];
+    private Image[] ghostImages;
+
+    // Constants
+    public final int WINDOW_WIDTH = 1400;
+    public final int WINDOW_HEIGHT = 880;
 
     public GameView(Game backend){
         this.backend = backend;
@@ -17,6 +19,7 @@ public class GameView extends JFrame {
         this.background = new ImageIcon("resources/GhostBusterBackground (1400 x 880 px).png").getImage();
 
         // Initialize an array of different colored ghost images
+        ghostImages = new Image[6];
         ghostImages[0] = new ImageIcon("resources/redGhost.png").getImage();
         ghostImages[1] = new ImageIcon("resources/orangeGhost.png").getImage();
         ghostImages[2] = new ImageIcon("resources/yellowGhost.png").getImage();
@@ -50,10 +53,11 @@ public class GameView extends JFrame {
         Toolkit.getDefaultToolkit().sync();
     }
 
-    // myPaint holds all drawing logic
+    // MyPaint holds all drawing logic
     public void myPaint(Graphics g) {
         int state = backend.getState();
 
+        // Case statement based on states
         if (state == Game.STATE_TITLE) {
             drawTitle(g);
         } else if (state == Game.STATE_INSTRUCTIONS) {
@@ -68,11 +72,13 @@ public class GameView extends JFrame {
     public void drawTitle(Graphics g) {
 
     }
+
     public void drawInstructions(Graphics g) {
 
     }
+
     public void drawGame(Graphics g){
-        // Draw background imgage
+        // Draw background image
         g.drawImage(background,0,0,this);
 
         // Draw arrow
@@ -89,17 +95,18 @@ public class GameView extends JFrame {
         // Iterate through 2D Ghost array and print it out
         for (Ghost[] ghost_row: ghosts) {
             for (Ghost currGhost : ghost_row) {
+                // Only draw the ghost if it is alive
                 if (currGhost.isAlive()) {
                     Image ghostImage = ghostImages[currGhost.getColorIndex()];
 
-                    // Draw ghost with it's x and y coor
+                    // Draw ghost with it's x and y coordinate
                     g.drawImage(ghostImage, (int) currGhost.getX(), (int) currGhost.getY(), this);
                 }
             }
         }
     }
+
     public void drawEnd(Graphics g){
-        //
         g.setColor(Color.ORANGE);
         g.fillRect(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
     }
