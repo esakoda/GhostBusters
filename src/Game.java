@@ -5,45 +5,51 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 public class Game implements KeyListener, ActionListener {
-    private Arrow arrow;
     private Ghost[][] ghosts;
-
     private Ball activeBall;
+    private Arrow arrow;
+
     private Timer gameTimer;
     private double shiftAmount;
-    private int timer;
+    private int numFrames;
+    private int seconds;
 
     private GameView window;
 
     private int state;
 
-    public static final int GAME_OVER_BOUNDS = 185;
-
-    // Magic Numbers for 2D Array
-    public static final int GHOST_ROWS = 7;
-    public static final int GHOST_COL = 12;
-
-    public static final int GHOST_X_SPACING = 110;
-    public static final int GHOST_Y_SPACING = 100;
-    public static final int GHOST_X_INITIAL = 960;
-    public static final int GHOST_Y_INITIAL = 75;
-
-
+    // Different game states
     public static final int STATE_TITLE = 0;
     public static final int STATE_INSTRUCTIONS = 1;
     public static final int STATE_GAME = 2;
     public static final int STATE_END = 3;
 
-    public static final int SLEEP_TIME = 16;
-    public static final int INCREASE_SPEED_TIME = 313;
-    public static final double INCREASE_SPEED_AMOUNT = 1.15;
-    public static final double STARTING_SHIFT_AMOUNT = 0.2;
+    // Magic Numbers for 2D Array
+    public static final int GHOST_ROWS = 7;
+    public static final int GHOST_COL = 12;
+
+    // Spacing and initialization of the 2D ghosts array
+    public static final int GHOST_X_SPACING = 110;
+    public static final int GHOST_Y_SPACING = 100;
+    public static final int GHOST_X_INITIAL = 960;
+    public static final int GHOST_Y_INITIAL = 75;
+
+    public static final int GAME_OVER_BOUNDS = 185;
+
+    // Constants for managing different time aspects in the game
+    private static final int SLEEP_TIME = 16;
+    private static final int INCREASE_SPEED_SECONDS = 5;
+    private static final double INCREASE_SPEED_AMOUNT = 1.15;
+    private static final double STARTING_SHIFT_AMOUNT = 0.2;
+    private static final int FRAMES_IN_A_SEC = 1000 / SLEEP_TIME;
 
     public Game(){
-        state = STATE_GAME;
-        arrow = new Arrow();
-        shiftAmount = STARTING_SHIFT_AMOUNT;
-        timer = INCREASE_SPEED_TIME;
+        // Initialization of instance variables
+        this.state = STATE_GAME;
+        this.arrow = new Arrow();
+        this.shiftAmount = STARTING_SHIFT_AMOUNT;
+        this.numFrames = 0;
+        this.seconds = 0;
 
         // Create a 2D array, representing a grid of ghosts
         this.ghosts = new Ghost[GHOST_ROWS][GHOST_COL];
@@ -56,35 +62,49 @@ public class Game implements KeyListener, ActionListener {
                 // Calculate each ghost's starting x and y positions based on row/col
                 int startX = col * GHOST_X_SPACING + GHOST_X_INITIAL;
                 int startY = row * GHOST_Y_SPACING + GHOST_Y_INITIAL;
-                ghosts[row][col] = new Ghost(randomColorIndex, startX, startY, row, col, true);
+                this.ghosts[row][col] = new Ghost(randomColorIndex, startX, startY, row, col, true);
             }
         }
 
+        // Creates a window object
         this.window = new GameView(this);
-        window.addKeyListener(this);
+        this.window.addKeyListener(this);
 
         // Creates a timer that tells the game to do the actionPerformed method every SLEEP_TIME seconds
-        gameTimer = new Timer(SLEEP_TIME, this);
-        gameTimer.start();
-
-        // TODO: add constants for the row/col size
+        this.gameTimer = new Timer(SLEEP_TIME, this);
+        this.gameTimer.start();
     }
 
     // Getter methods
     public Ghost[][] getGhosts() {
-        return ghosts;
+        return this.ghosts;
+    }
+
+    public Ball getActiveBall(){
+        return this.activeBall;
+    }
+
+    public int getScore() {
+        return this.seconds;
+    }
+
+    public int getState() {
+        return state;
+    }
+
+    public Arrow getArrow(){
+        return arrow;
     }
 
     // Recursive method that deletes ghost neighbors of same color
     public void ghostPop(int colorIndex, int row, int col) {
         // If the row and col are outside the bounds of the ghosts on the screen, no need to check
-        // TODO: find how to keep a counter of the number of cols increases as the screen moves
-        // TODO: for now keep it stagnant within the 4 by 7 bounds
         if (row < 0 || row >= GHOST_ROWS || col < 0 || col >= GHOST_COL) {
             return;
         }
 
-        Ghost currGhost = ghosts[row][col];
+        Ghost currGhost = this.ghosts[row][col];
+
         // If the ghost is not alive, no need to check
         if (!currGhost.isAlive()) {
             return;
@@ -105,11 +125,6 @@ public class Game implements KeyListener, ActionListener {
         ghostPop(colorIndex, row, col + 1);
     }
 
-
-    public Ball getActiveBall(){
-        return activeBall;
-    }
-
     // Function for checking if a ball has hit a ghost
     public Ghost checkBallHitGhost(){
         // Ball dimensions
@@ -121,7 +136,7 @@ public class Game implements KeyListener, ActionListener {
         // Nested loop that goes through every ghost and checks if ball hit - columns first for efficiency
         for (int col = 0; col < GHOST_COL; col++){
             for (int row = 0; row < GHOST_ROWS; row++){
-                Ghost currGhost = ghosts[row][col];
+                Ghost currGhost = this.ghosts[row][col];
 
                 // Skip if ghost is null (already hit or removed)
                 if (!currGhost.isAlive()){
@@ -147,22 +162,13 @@ public class Game implements KeyListener, ActionListener {
 
     // Checks if the ghosts have hit the player. If so, game over.
     public void checkGameOver(){
-        // TODO: are there any edge cases? I feel like this is a little dangerous for index error
-        for (int row = 0; row < GHOST_ROWS; row++) {
-            Ghost currGhost = ghosts[row][0];
-
-            // If there is a ghost isAlive and inside the boundaries of the person, game over
-            if (currGhost.isAlive() && currGhost.getX() <= GAME_OVER_BOUNDS) {
-                // Update the state
-                this.state = STATE_END;
-
-                // Early exit to prevent redundancy
-                return;
-            }
+        // Given that the first column always has valid ghost, check if the first column cross the bounds
+        if (this.ghosts[0][0].getX() <= GAME_OVER_BOUNDS) {
+            // Update the state
+            this.state = STATE_END;
         }
     }
 
-    // TODO: integrate with Ellen's code
     // Updates the front column each time a ghost is hit
     public void updateFrontCol() {
         // Continues to index through the array, if we haven't found a single valid column
@@ -171,7 +177,7 @@ public class Game implements KeyListener, ActionListener {
             // Loop through the first column to find a valid, alive Ghost
             for (int row = 0; row < GHOST_ROWS; row++) {
                 // If we find a valid living ghost, can early exit
-                if (ghosts[row][0].isAlive()) {
+                if (this.ghosts[row][0].isAlive()) {
                     return;
                 }
             }
@@ -189,11 +195,10 @@ public class Game implements KeyListener, ActionListener {
         for (int row = 0; row < GHOST_ROWS; row++) {
             for (int col = 1; col < GHOST_COL; col++) {
                 // Update the ghosts column value
-                Ghost currGhost = ghosts[row][col];
+                Ghost currGhost = this.ghosts[row][col];
 
                 // Shift the currGhost column value
                 currGhost.setCol(col - 1);
-
                 condenseGhost[row][col - 1] = currGhost;
             }
         }
@@ -209,47 +214,47 @@ public class Game implements KeyListener, ActionListener {
             condenseGhost[row][lastCol] = new Ghost(randomColorIndex, startX, startY, row, lastCol, true);
         }
 
-        ghosts = condenseGhost;
+        // Update the ghost 2D array with newly indexed array
+        this.ghosts = condenseGhost;
     }
 
     // Move the array of ghosts toward the user
     public void moveGhosts(){
-        for (int i = 0; i < ghosts.length; i++){
-            for (int j = 0; j < ghosts[i].length; j++){
-                ghosts[i][j].setX(ghosts[i][j].getX() - shiftAmount);
+        // Index through the entire 2D array of ghosts to update their x coordinate
+        for (int i = 0; i < GHOST_ROWS; i++){
+            for (int j = 0; j < GHOST_COL; j++){
+                // Update the ghosts x coordinate
+                this.ghosts[i][j].setX(this.ghosts[i][j].getX() - this.shiftAmount);
             }
         }
-    }
-
-    public int getState() {
-        return state;
-    }
-
-    public Arrow getArrow(){
-        return arrow;
-    }
-
-    @Override
-    public void keyTyped(KeyEvent e) {
-
     }
 
     @Override
     // Moves the ball / ball animation function
     // Called every SLEEP_TIME by the Timer. If a ball is currently moving, move it one step and then repaint
     public void actionPerformed(ActionEvent e){
-        // CHeck if game over
-        if (state != STATE_GAME) {
+        // Check if game over
+        if (this.state != STATE_GAME) {
             return;
         }
-        // Decrease timer
-        timer--;
-        if (timer <= 0){
-            // Increase speed of ghosts
-            shiftAmount = shiftAmount * INCREASE_SPEED_AMOUNT;
-            // Reset timer
-            timer = INCREASE_SPEED_TIME;
+
+        // Count the number of frames
+        this.numFrames++;
+
+        // If the number of frames exceed the number of frames in a second
+        if (this.numFrames >= FRAMES_IN_A_SEC){
+            this.seconds++;
+
+            // For every x seconds passed
+            if (this.seconds % INCREASE_SPEED_SECONDS == 0) {
+                // Increase speed of ghosts
+                this.shiftAmount *= INCREASE_SPEED_AMOUNT;
+            }
+
+            // Reset the number of frames
+            this.numFrames = 0;
         }
+
         // Move the ghosts across the screen every time
         moveGhosts();
 
@@ -257,13 +262,13 @@ public class Game implements KeyListener, ActionListener {
         checkGameOver();
 
         // Check if there is an active ball because if there is no ball we cant call checkBallHitGhost()
-        if (activeBall != null) {
-            activeBall.move();
+        if (this.activeBall != null) {
+            this.activeBall.move();
 
             // Check if ghost was hit
             Ghost hitGhost = checkBallHitGhost();
             if (hitGhost == null){
-                window.repaint();
+                this.window.repaint();
                 return;
             }
             if (hitGhost.isAlive()){
@@ -274,10 +279,10 @@ public class Game implements KeyListener, ActionListener {
                 updateFrontCol();
 
                 // Delete the ball
-                activeBall = null;
+                this.activeBall = null;
             }
         }
-        window.repaint();
+        this.window.repaint();
     }
 
     @Override
@@ -286,24 +291,29 @@ public class Game implements KeyListener, ActionListener {
         {
             case KeyEvent.VK_UP:
                 // Shifts angle up
-                arrow.shiftAngle(-1);
+                this.arrow.shiftAngle(-1);
                 break;
             case KeyEvent.VK_DOWN:
                 // Shifts angle down
-                arrow.shiftAngle(1);
+                this.arrow.shiftAngle(1);
                 break;
             case KeyEvent.VK_SPACE:
                 // Shoots out a ball
-                if (activeBall == null){
-                    activeBall = new Ball (arrow.getStartX(), arrow.getStartY(), arrow.getAngle());
+                if (this.activeBall == null){
+                    this.activeBall = new Ball (arrow.getStartX(), arrow.getStartY(), arrow.getAngle());
                 }
                 break;
         }
-        window.repaint();
+        this.window.repaint();
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
+
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
 
     }
 
