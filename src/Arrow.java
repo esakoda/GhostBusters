@@ -8,7 +8,7 @@ public class Arrow{
     private static final int START_X = 282;
     private static final int START_Y = 407;
 
-    private static final double SENSITIVITY = 0.07;
+    private static final double SENSITIVITY = 0.08;
     private static final int ARROW_LENGTH = 100;
 
     public Arrow(){
@@ -24,7 +24,7 @@ public class Arrow{
 
         // Calculates new end x and end y by using cosine and sine to get the new horizontal and vertical positions
         // of the arrow based on the new angle
-        endX = (int)(START_X + ARROW_LENGTH * Math.cos(angle));
+        this.endX = (int)(START_X + ARROW_LENGTH * Math.cos(angle));
         endY = (int)(START_Y + ARROW_LENGTH * Math.sin(angle));
     }
 

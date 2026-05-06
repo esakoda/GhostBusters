@@ -37,7 +37,7 @@ public class Ghost {
     }
 
     public boolean isAlive() {
-        return isAlive;
+        return this.isAlive;
     }
 
     // Setter methods
