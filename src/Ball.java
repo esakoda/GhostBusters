@@ -7,6 +7,7 @@ public class Ball {
     private double dy;
     private boolean isActive;
 
+    // Ball dimensions
     public static final int RADIUS = 8;
     public static final double SPEED = 12.0;
 
@@ -27,55 +28,55 @@ public class Ball {
 
     public void move() {
         // If the ball is dead
-        if (!isActive) {
+        if (!this.isActive) {
             return;
         }
 
         // Increase position by speed - so it moves
-        x += dx;
-        y += dy;
+        this.x += this.dx;
+        this.y += this.dy;
 
         // Bounce off left/right walls
-        if (x - RADIUS <= LEFT_WALL) {
-            x = LEFT_WALL + RADIUS;
-            dx = -dx;
+        if (this.x - RADIUS <= LEFT_WALL) {
+            this.x = LEFT_WALL + RADIUS;
+            this.dx = -this.dx;
         } else if (x + RADIUS >= RIGHT_WALL) {
-            x = RIGHT_WALL - RADIUS;
-            dx = -dx;
+            this.x = RIGHT_WALL - RADIUS;
+            this.dx = -this.dx;
         }
 
         // Bounce off top/bottom walls
-        if (y - RADIUS <= TOP_WALL) {
-            y = TOP_WALL + RADIUS;
-            dy = -dy;
-        } else if (y + RADIUS >= BOTTOM_WALL) {
-            y = BOTTOM_WALL - RADIUS;
-            dy = -dy;
+        if (this.y - RADIUS <= TOP_WALL) {
+            this.y = TOP_WALL + RADIUS;
+            this.dy = -this.dy;
+        } else if (this.y + RADIUS >= BOTTOM_WALL) {
+            this.y = BOTTOM_WALL - RADIUS;
+            this.dy = -this.dy;
         }
     }
     // TODO: Checks if ball hit a ghost
 
     public void draw(Graphics g){
         // Don't draw if the ball is dead
-        if (!isActive){
+        if (!this.isActive){
             return;
         }
         // Ball draws itself
         g.setColor(Color.WHITE);
-        g.fillOval((int)(x - RADIUS), (int)(y - RADIUS), RADIUS * 2, RADIUS * 2);
+        g.fillOval((int)(this.x - RADIUS), (int)(this.y - RADIUS), RADIUS * 2, RADIUS * 2);
     }
 
     // Getters and Setters
     public int getX() {
-        return x;
+        return this.x;
     }
 
     public int getY() {
-        return y;
+        return this.y;
     }
 
     public boolean isActive(){
-        return isActive;
+        return this.isActive;
     }
 
     public void setActive(boolean active){

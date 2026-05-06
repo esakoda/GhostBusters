@@ -46,7 +46,7 @@ public class Game implements KeyListener, ActionListener {
 
     public Game(){
         // Initialization of instance variables
-        this.state = STATE_GAME;
+        this.state = STATE_TITLE;
         this.arrow = new Arrow();
         this.shiftAmount = STARTING_SHIFT_AMOUNT;
         this.numFrames = 0;
@@ -235,7 +235,8 @@ public class Game implements KeyListener, ActionListener {
     // Called every SLEEP_TIME by the Timer. If a ball is currently moving, move it one step and then repaint
     public void actionPerformed(ActionEvent e){
         // Check if game over
-        if (this.state != STATE_GAME) {
+        if (state != STATE_GAME) {
+            window.repaint();
             return;
         }
 
@@ -300,12 +301,18 @@ public class Game implements KeyListener, ActionListener {
                 break;
             case KeyEvent.VK_SPACE:
                 // Shoots out a ball
-                if (this.activeBall == null){
-                    this.activeBall = new Ball (arrow.getStartX(), arrow.getStartY(), arrow.getAngle());
+                if (activeBall == null){
+                    activeBall = new Ball (arrow.START_X, arrow.START_Y, arrow.getAngle());
                 }
                 break;
-            case KeyEvent.VK_Q:
-                state = STATE_END;
+            case KeyEvent.VK_ENTER:
+                // When user presses enter game begins
+                state = STATE_GAME;
+                break;
+            case KeyEvent.VK_I:
+                // When user presses i - instructions screen displayed
+                state = STATE_INSTRUCTIONS;
+                break;
         }
         this.window.repaint();
     }
