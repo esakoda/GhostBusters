@@ -13,6 +13,8 @@ public class GameView extends JFrame {
 
     private final int SCORE_X = 60;
     private final int SCORE_Y = 600;
+    private final int FINAL_SCORE_X = 600;
+    private final int FINAL_SCORE_Y = 700;
     private final int FONT_SIZE = 30;
 
     private final Image TITLE_IMAGE = new ImageIcon("resources/GhostBustersTitleScreen.png").getImage();
@@ -92,7 +94,7 @@ public class GameView extends JFrame {
         Font timeFont = new Font("Serif", Font.ITALIC, FONT_SIZE);
         g.setFont(timeFont);
         g.setColor(Color.RED);
-        g.drawString("Score: ", SCORE_X,SCORE_Y);
+        g.drawString("Score: " + backend.getScore(), SCORE_X,SCORE_Y);
 
         // Draw arrow
         backend.getArrow().draw(g);
@@ -121,5 +123,10 @@ public class GameView extends JFrame {
     public void drawEnd(Graphics g){
         // Display game over image
         g.drawImage(END_IMAGE, 0,0, WINDOW_WIDTH, WINDOW_HEIGHT, this);
+        // Draw final score
+        Font timeFont = new Font("Serif", Font.ITALIC, FONT_SIZE);
+        g.setFont(timeFont);
+        g.setColor(Color.RED);
+        g.drawString("FINAL SCORE: " + backend.getScore(), FINAL_SCORE_X,FINAL_SCORE_Y);
     }
 }
