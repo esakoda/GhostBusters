@@ -19,7 +19,7 @@ public class GameView extends JFrame {
 
     private final Image TITLE_IMAGE = new ImageIcon("resources/GhostBustersTitleScreen.png").getImage();
     private final Image END_IMAGE = new ImageIcon("resources/GhostBustersGameOver.png").getImage();
-    private final Image INSTURCTIONS_IMAGE = new ImageIcon("resources/GhostBustersInstructions.png").getImage();
+    private final Image INSTURCTIONS_IMAGE = new ImageIcon("resources/GhostBustersInstructions2.png").getImage();
     private final Image GAME_IMAGE = new ImageIcon("resources/GameBackground2.png").getImage();
 
     public GameView(Game backend){

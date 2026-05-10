@@ -235,7 +235,7 @@ public class Game implements KeyListener, ActionListener {
     // Called every SLEEP_TIME by the Timer. If a ball is currently moving, move it one step and then repaint
     public void actionPerformed(ActionEvent e){
         // Check if game over
-        if (state != STATE_GAME) {
+        if (this.state != STATE_GAME) {
             window.repaint();
             return;
         }
@@ -301,7 +301,7 @@ public class Game implements KeyListener, ActionListener {
                 break;
             case KeyEvent.VK_SPACE:
                 // Shoots out a ball
-                if (activeBall == null){
+                if (this.activeBall == null){
                     activeBall = new Ball (arrow.START_X, arrow.START_Y, arrow.getAngle());
                 }
                 break;
